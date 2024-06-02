@@ -21,5 +21,7 @@
 ```bash
  npm install -g netlify-cli
  ntl init
+ ntl build
  ntl deploy
+ ntl deploy --prod
 ```
