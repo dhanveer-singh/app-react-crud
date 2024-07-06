@@ -4,6 +4,7 @@ import cors from 'cors';
 import colors from 'colors'
 
 // Connect to MongoDB 
+
 connectDB();
 
 const app = express();
