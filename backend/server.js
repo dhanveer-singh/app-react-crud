@@ -2,7 +2,7 @@ import express from 'express';
 import connectDB from './config/db.js';
 import cors from 'cors';
 import colors from 'colors'
-
+import userRoutes from './routes/userRoutes.js'
 // Connect to MongoDB 
 
 connectDB();
@@ -17,6 +17,7 @@ app.use((err,req, res, next) => {
 });
 
 //Route
+app.use("/api/user", userRoutes);
 
 const PORT = process.env.PORT || 5000
 const HOSTNAME = process.env.HOSTNAME || localhost
