@@ -3,44 +3,66 @@ import { useEffect, useState } from "react";
 import { appConstants } from "../../shared/utils/appConstants";
 
 function Users() {
-  let staticData = [];
-  const [values, setValues] = useState([]);
+  const [userList, setUserList] = useState([]);
   useEffect(() => {
     fetchUser();
   }, []);
+
   const fetchUser = async () => {
-    console.log("Inside");
     await axios
-      .post(`${appConstants.baseURL}user/fetchUser`)
+      .get(`${appConstants.baseURL}user/fetchUser`)
       .then((res) => {
         let response = res.data;
-        let fetchedUser = response.result_Output;
-        setValues(fetchedUser)
+        let fetchedUser = response.Result_Output;
+        setUserList(fetchedUser);
         console.log("fetchedUser", fetchedUser);
       })
       .catch((error) => {
+        console.log("Inside catch");
         console.error("Catch Error in Fetching Users", error);
       });
   };
-
+  const deleteUser = async (selectedId) => {
+    try {
+      await axios.post(appConstants.baseURL + "user/deleteUser", {_id: selectedId}).then((res) => {
+        let response = res.data;
+        console.log("response", response);
+      });
+    } catch (error) {
+      console.log("Catch in DeleteUser API", error);
+    }
+  };
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          {
-            values.map()
-          }
-          <td>Mark</td>
-          <td>Otto</td>
-        </tr>
-      </tbody>
-    </table>
+    <>
+      <table className="table table-hover table-striped table-bordered mt-5">
+        <thead>
+          <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userList.map((arr) => {
+            return (
+              <tr key={arr._id}>
+                <td>{arr.firstName}</td>
+                <td>{arr.lastName}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => deleteUser(arr._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 }
 

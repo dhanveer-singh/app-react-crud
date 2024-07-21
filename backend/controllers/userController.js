@@ -42,4 +42,23 @@ const fetchUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { addNewUser, fetchUser };
+const deleteUser = asyncHandler(async (req, res) => {
+  let post = req.body;
+  try {
+    console.log("deleteQuery");
+    const deleteQuery = { _id: mongoose.Types.ObjectId(post._id) };
+    console.log("deleteQuery1");
+    if (post._id != undefined && post._id != "") {
+      await Users.deleteOne(deleteQuery);
+      res
+        .status(201)
+        .json(genericResponse(true, "User Deleted Successfully!", []));
+    } else {
+      res.status(400).json(genericResponse(false, "User not found!", []));
+    }
+  } catch (error) {
+    let errorDeleteUser = genericResponse(false, error.message, []);
+    res.status(400).json(errorDeleteUser);
+  }
+});
+export { addNewUser, fetchUser, deleteUser };
