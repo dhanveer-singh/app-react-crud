@@ -18,7 +18,8 @@ function AddUser() {
       [name]: event.target.value,
     });
   };
-  const submitFormData = async () => {
+  const submitFormData = async (e) => {
+    e.preventDefault();
     const { firstName, lastName } = formData;
     try {
       if (firstName.toString().trim() === "") {
@@ -42,14 +43,15 @@ function AddUser() {
                 title: "Added Successfully!",
                 text: " ",
                 icon: "success",
-                color: "green",
                 button: false,
                 timer: 2000,
+                showConfirmButton: false,
               });
               setFormData({
                 firstName: "",
                 lastName: "",
               });
+              window.location.reload();
             } else {
               Swal.fire({
                 title: response.Result_Message,
@@ -77,56 +79,48 @@ function AddUser() {
           <div className="col-12 col-sm-6">
             <div className="card">
               <h5 className="card-header">User Registration Form</h5>
-              <div className="card-body py-4">
-                <div className="row g-3">
-                  <div className="col-12 col-sm-6">
-                    <label htmlFor="firstName" className="form-label">
-                      First Name<span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="firstName"
-                      pattern="^[A-Za-z]+$"
-                      value={formData.firstName}
-                      onChange={handleChange("firstName")}
-                      placeholder="Enter Name"
-                    />
-                    {firstNameErr && (
-                      <label className="text-danger">
-                        Please Enter First Name
+              <form onSubmit={submitFormData}>
+                <div className="card-body py-4">
+                  <div className="row g-3">
+                    <div className="col-12 col-sm-6">
+                      <label htmlFor="firstName" className="form-label">
+                        First Name<span className="text-danger">*</span>
                       </label>
-                    )}
-                  </div>
-                  <div className="col-12 col-sm-6">
-                    <label htmlFor="lastName" className="form-label">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange("lastName")}
-                      placeholder="Enter Name"
-                    />
-                    {lastNameErr && (
-                      <label className="text-danger">
-                        Please Enter Last Name
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="firstName"
+                        pattern="^[A-Za-z]+$"
+                        value={formData.firstName}
+                        onChange={handleChange("firstName")}
+                        placeholder="Enter Name"
+                      />
+                      {firstNameErr && (
+                        <label className="text-danger">Enter First Name</label>
+                      )}
+                    </div>
+                    <div className="col-12 col-sm-6">
+                      <label htmlFor="lastName" className="form-label">
+                        Last Name
                       </label>
-                    )}
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange("lastName")}
+                        placeholder="Enter Name"
+                      />
+                      {lastNameErr && (
+                        <label className="text-danger">Enter Last Name</label>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="card-footer text-center">
-                <button
-                  type="submit"
-                  className="btn btn-primary px-4"
-                  onClick={submitFormData}
-                >
-                  Submit
-                </button>
-              </div>
+                <div className="card-footer text-center">
+                  <button type="submit" className="btn btn-primary px-4">Submit</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

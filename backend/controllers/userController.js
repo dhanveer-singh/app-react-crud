@@ -41,24 +41,27 @@ const fetchUser = asyncHandler(async (req, res) => {
     res.status(400).json(errorResponse);
   }
 });
+const updateUser = asyncHandler(async (req, res)=>{
 
+})
 const deleteUser = asyncHandler(async (req, res) => {
-  let post = req.body;
+  let { _id } = req.body;
+  if (!_id) {
+    return res.status(400).json(genericResponse(false, "User ID is required!", []));
+  }
+
   try {
-    console.log("deleteQuery");
-    const deleteQuery = { _id: mongoose.Types.ObjectId(post._id) };
-    console.log("deleteQuery1");
-    if (post._id != undefined && post._id != "") {
-      await Users.deleteOne(deleteQuery);
-      res
-        .status(201)
-        .json(genericResponse(true, "User Deleted Successfully!", []));
-    } else {
-      res.status(400).json(genericResponse(false, "User not found!", []));
+    console.log("deleteQuery Try");
+    const deleteQuery = { _id: _id };
+    console.log("deleteQuery1", deleteQuery);
+    let result = await Users.deleteOne(deleteQuery);
+    if (result.deletedCount === 0) {
+      return res.status(404).json(genericResponse(false, "User Not Found!", []));
     }
+    return res.status(200).json(genericResponse(true, "User Deleted Successfully!", []));
   } catch (error) {
     let errorDeleteUser = genericResponse(false, error.message, []);
     res.status(400).json(errorDeleteUser);
   }
 });
-export { addNewUser, fetchUser, deleteUser };
+export { addNewUser, fetchUser, updateUser, deleteUser };

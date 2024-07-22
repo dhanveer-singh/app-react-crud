@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { appConstants } from "../../shared/utils/appConstants";
+import Swal from "sweetalert2";
 
 function Users() {
   const [userList, setUserList] = useState([]);
@@ -15,7 +16,6 @@ function Users() {
         let response = res.data;
         let fetchedUser = response.Result_Output;
         setUserList(fetchedUser);
-        console.log("fetchedUser", fetchedUser);
       })
       .catch((error) => {
         console.log("Inside catch");
@@ -24,9 +24,27 @@ function Users() {
   };
   const deleteUser = async (selectedId) => {
     try {
-      await axios.post(appConstants.baseURL + "user/deleteUser", {_id: selectedId}).then((res) => {
+      await axios.post(appConstants.baseURL + "user/deleteUser", { _id: selectedId }).then((res) => {
         let response = res.data;
-        console.log("response", response);
+        if (response.Result_Status) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "User has been Deleted Successfully!",
+            icon: "success",
+            button: false,
+            timer: 2000,
+            showConfirmButton: false,
+          })
+          fetchUser();
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
       });
     } catch (error) {
       console.log("Catch in DeleteUser API", error);
